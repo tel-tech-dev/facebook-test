@@ -1,0 +1,27 @@
+name: Test Szubin24
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Normal request
+        run: |
+          curl -v -L \
+          -o /dev/null \
+          -w "\nHTTP=%{http_code}\nREMOTE_IP=%{remote_ip}\n" \
+          "https://www.szubin24.pl/Obrzed__blogoslawienstwa_zwierzat._Wydarzenie_w_parafii,140059.html"
+
+      - name: Facebook-like request
+        run: |
+          curl -v --http1.1 -L \
+          -A "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)" \
+          -H "Range: bytes=0-524287" \
+          -H "Accept: */*" \
+          -H "Accept-Encoding: deflate, gzip" \
+          -o /dev/null \
+          -w "\nHTTP=%{http_code}\nREMOTE_IP=%{remote_ip}\n" \
+          "https://www.szubin24.pl/Obrzed__blogoslawienstwa_zwierzat._Wydarzenie_w_parafii,140059.html"
